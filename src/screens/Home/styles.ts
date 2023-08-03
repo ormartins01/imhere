@@ -46,6 +46,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#31CF67',
     alignItems: 'center',
     justifyContent: 'center',
+    textAlign: 'center',
     marginTop: 14
   },
 

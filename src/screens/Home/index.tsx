@@ -9,24 +9,38 @@ export interface IParticipant {
 }
 
 export function Home() {
-    const participants = ["Ricardo", "Janaína", "Guilherme", "Henrique", "Carlos", "Renate", "Jucenilda", "Sebastião", "Lucas", "Gustavo", "Fernanda", ]
-
-    // const [participantsList, setParticipantsList] = useState<IParticipant[]>(list)
+    const [participants, setParticipants] = useState<string[]>([]);
+    const [newParticipant, setNewParticipant] = useState('');
 
     function handleParticipantAdd() {
 
-        if (participants.includes('Ricardo')) {
+        if (participants.includes(newParticipant)) {
             return Alert.alert("Participante existe", "Já existe um participante na lista com esse nome.");
+        }
 
-        } 
-        console.log("Você clicou no botão de adicionar")
+        setParticipants(prevState => [...prevState, newParticipant] );
+        setNewParticipant('');
     };
 
-    function handleParticipantRemove(participant: string) {
-        if (participants.includes('Ricardo')) {
-            return Alert.alert("Remover participante", "Tem certeza que deseja remover este paticipant?");
-        } 
-        console.log(`Você removeu o participant ${participant}`)
+    function handleParticipantRemove(participantDeleted: string) {
+
+        
+
+        if (participants.includes(participantDeleted)) {
+            return Alert.alert("Remover participante", `Tem certeza que deseja remover ${participantDeleted} do evento??`, [
+                {
+                    text: 'Sim',
+                    onPress: () => (
+                        setParticipants(prevState => prevState.filter(participant => participant !== participantDeleted)),
+                        Alert.alert("Removido", "Participante removido com sucesso.")
+                        )
+                },
+                {
+                    text: 'Não',
+                    style: 'cancel'
+                }
+            ]);
+        }
     }
 
 
@@ -42,6 +56,8 @@ export function Home() {
                     style={styles.input}
                     placeholder="Nome do Participante"
                     placeholderTextColor="#6B6B6B"
+                    onChangeText={text => setNewParticipant(text)}
+                    value={newParticipant}
                 />
 
                 <TouchableOpacity
@@ -54,20 +70,20 @@ export function Home() {
                 </TouchableOpacity>
             </View>
 
-            <FlatList 
-            data={participants}
-            keyExtractor={item => item}  // pode ser usado item.id para objetos.
-            showsVerticalScrollIndicator={false}
-            renderItem={({item}) => (
-                <Participant
-                key={item}
-                name={item}
-                onRemove={() => handleParticipantRemove(item)}
-            />
-            )}
-            ListEmptyComponent={() => (
-                <Text style={styles.emptyText}>Não há participantes cadastrados.</Text>
-            )}
+            <FlatList
+                data={participants}
+                keyExtractor={item => item}  // pode ser usado item.id para objetos.
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item }) => (
+                    <Participant
+                        key={item}
+                        name={item}
+                        onRemove={() => handleParticipantRemove(item)}
+                    />
+                )}
+                ListEmptyComponent={() => (
+                    <Text style={styles.emptyText}>Não há participantes cadastrados.</Text>
+                )}
             />
 
         </View >
